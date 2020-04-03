@@ -76,24 +76,24 @@ services:
 #            - tl-network
 #
 #
-#    thelibrary-service-monitoring:
-#        build:
-#            context: build
-#            dockerfile: Dockerfile-monitoring
-#        container_name: cont-thelibrary-monitoring
-#        environment:
-#            - 'SERVER_PORT=8030'
-#            - 'SPRING_CLOUD_CONFIG_URI=http://thelibrary-service-configuration:8888'
-#            - 'SPRING_CLOUD_CONFIG_USERNAME=confUser'
-#            - 'SPRING_CLOUD_CONFIG_PWD=confPassword'
-#            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
-#        command: ["/wait-for-it.sh", "thelibrary-service-configuration:8888", "--", "java", "-jar", "monitoring-service-0.0.1-SNAPSHOT.jar"]
-#        ports:
-#            - 8030:8030
-#        #        expose:
-#        #          - 8761
-#        networks:
-#            - tl-network
+    thelibrary-service-monitoring:
+        build:
+            context: build
+            dockerfile: Dockerfile-monitoring
+        container_name: cont-thelibrary-monitoring
+        environment:
+            - 'SERVER_PORT=8030'
+            - 'SPRING_CLOUD_CONFIG_URI=http://thelibrary-service-configuration:8888'
+            - 'SPRING_CLOUD_CONFIG_USERNAME=confUser'
+            - 'SPRING_CLOUD_CONFIG_PWD=confPassword'
+            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
+        command: ["/wait-for-it.sh", "thelibrary-service-configuration:8888", "--", "java", "-jar", "monitoring-service-0.0.1-SNAPSHOT.jar"]
+        ports:
+            - 8030:8030
+        #        expose:
+        #          - 8761
+        networks:
+            - tl-network
 #
 #
 #    thelibrary-service-book:

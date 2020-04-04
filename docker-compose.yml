@@ -9,13 +9,15 @@ services:
         container_name: cont-thelibrary-configuration
         environment:
             - 'SERVER_PORT=8888'
-            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
+#            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
+            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@localhost:8761/eureka/'
         ports:
             - 8888:8888
 #        expose:
 #          - 8888
-        networks:
-            - tl-network
+        network_mode: host
+#        networks:
+#            - tl-network
 
 
     thelibrary-service-discovery:
@@ -25,17 +27,19 @@ services:
         container_name: cont-thelibrary-discovery
         environment:
             - 'SERVER_PORT=8761'
-            - 'SPRING_CLOUD_CONFIG_URI=http://thelibrary-service-configuration:8888'
+            - 'SPRING_CLOUD_CONFIG_URI=http://localhost:8888'
             - 'SPRING_CLOUD_CONFIG_USERNAME=confUser'
             - 'SPRING_CLOUD_CONFIG_PWD=confPassword'
-            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
-        command: ["/wait-for-it.sh", "thelibrary-service-configuration:8888", "--", "java", "-jar", "discovery-service-0.0.1-SNAPSHOT.jar"]
+#            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
+            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@localhost:8761/eureka/'
+        command: ["/wait-for-it.sh", "localhost:8888", "--", "java", "-jar", "discovery-service-0.0.1-SNAPSHOT.jar"]
         ports:
             - 8761:8761
 #        expose:
 #          - 8761
-        networks:
-            - tl-network
+        network_mode: host
+#        networks:
+#            - tl-network
 
 
     thelibrary-service-gateway:
@@ -45,15 +49,17 @@ services:
         container_name: cont-thelibrary-gateway
         environment:
             - 'SERVER_PORT=8010'
-            - 'SPRING_CLOUD_CONFIG_URI=http://thelibrary-service-configuration:8888'
+            - 'SPRING_CLOUD_CONFIG_URI=http://localhost:8888'
             - 'SPRING_CLOUD_CONFIG_USERNAME=confUser'
             - 'SPRING_CLOUD_CONFIG_PWD=confPassword'
-            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
-        command: ["/wait-for-it.sh", "thelibrary-service-configuration:8888", "--", "java", "-jar", "gateway-service-0.0.1-SNAPSHOT.jar"]
+#            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
+            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@localhost:8761/eureka/'
+        command: ["/wait-for-it.sh", "localhost:8888", "--", "java", "-jar", "gateway-service-0.0.1-SNAPSHOT.jar"]
         ports:
             - 8010:8010
-        networks:
-            - tl-network
+        network_mode: host
+#        networks:
+#            - tl-network
 #
 #
 #    thelibrary-service-dashboard:
@@ -63,11 +69,11 @@ services:
 #        container_name: cont-thelibrary-dashboard
 #        environment:
 #            - 'SERVER_PORT=8020'
-#            - 'SPRING_CLOUD_CONFIG_URI=http://thelibrary-service-configuration:8888'
+#            - 'SPRING_CLOUD_CONFIG_URI=http://localhost:8888'
 #            - 'SPRING_CLOUD_CONFIG_USERNAME=confUser'
 #            - 'SPRING_CLOUD_CONFIG_PWD=confPassword'
 #            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
-#        command: ["/wait-for-it.sh", "thelibrary-service-configuration:8888", "--", "java", "-jar", "dashboard-service-0.0.1-SNAPSHOT.jar"]
+#        command: ["/wait-for-it.sh", "localhost:8888", "--", "java", "-jar", "dashboard-service-0.0.1-SNAPSHOT.jar"]
 #        ports:
 #            - 8020:8020
 #        #        expose:
@@ -83,53 +89,58 @@ services:
         container_name: cont-thelibrary-monitoring
         environment:
             - 'SERVER_PORT=8030'
-            - 'SPRING_CLOUD_CONFIG_URI=http://thelibrary-service-configuration:8888'
+            - 'SPRING_CLOUD_CONFIG_URI=http://localhost:8888'
             - 'SPRING_CLOUD_CONFIG_USERNAME=confUser'
             - 'SPRING_CLOUD_CONFIG_PWD=confPassword'
-            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
-        command: ["/wait-for-it.sh", "thelibrary-service-configuration:8888", "--", "java", "-jar", "monitoring-service-0.0.1-SNAPSHOT.jar"]
+#            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
+            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@localhost:8761/eureka/'
+        command: ["/wait-for-it.sh", "localhost:8888", "--", "java", "-jar", "monitoring-service-0.0.1-SNAPSHOT.jar"]
         ports:
             - 8030:8030
         #        expose:
         #          - 8761
-        networks:
-            - tl-network
-#
-#
-#    thelibrary-service-book:
-#        build:
-#            context: build
-#            dockerfile: Dockerfile-book
-#        container_name: cont-thelibrary-book
-#        command: ["/wait-for-it.sh", "thelibrary-service-configuration:8888", "--", "java", "-Dspring.profiles.active=dev", "-jar", "microservice-book-0.0.1-SNAPSHOT.jar"]
-#        environment:
-#            - 'SERVER_PORT=9010'
-#            - 'SPRING_CLOUD_CONFIG_URI=http://thelibrary-service-configuration:8888'
-#            - 'SPRING_CLOUD_CONFIG_USERNAME=confUser'
-#            - 'SPRING_CLOUD_CONFIG_PWD=confPassword'
-#            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
+        network_mode: host
 #        networks:
 #            - tl-network
 
 
-#    thelibrary-angular:
-#        build:
-#            context: build
-#            dockerfile: angular-app/Dockerfile-front
-#        container_name: cont-thelibrary-angular
-##        volumes:
-##            - front:/app
-##            - /app/node_modules
-#        ports:
-#            - 4200:4200
-##        networks:
-##            - tl-network
+    thelibrary-service-book:
+        build:
+            context: build
+            dockerfile: Dockerfile-book
+        container_name: cont-thelibrary-book
+        command: ["/wait-for-it.sh", "localhost:8888", "--", "java", "-Dspring.profiles.active=dev", "-jar", "microservice-book-0.0.1-SNAPSHOT.jar"]
+        environment:
+            - 'SERVER_PORT=9010'
+            - 'SPRING_CLOUD_CONFIG_URI=http://localhost:8888'
+            - 'SPRING_CLOUD_CONFIG_USERNAME=confUser'
+            - 'SPRING_CLOUD_CONFIG_PWD=confPassword'
+#            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@thelibrary-service-discovery:8761/eureka/'
+            - 'EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discUser:discPassword@localhost:8761/eureka/'
+        network_mode: host
+#        networks:
+#            - tl-network
+
+
+    thelibrary-angular:
+        build:
+            context: build
+            dockerfile: angular-app/Dockerfile-front
+        container_name: cont-thelibrary-angular
+#        volumes:
+#            - front:/app
+#            - /app/node_modules
+        ports:
+            - 4200:4200
+        network_mode: host
+#        networks:
+#            - tl-network
 #        
 
-networks:
-    tl-network:
-#        internal: true
-        driver: bridge
+#networks:
+#    tl-network:
+##        internal: true
+#        driver: bridge
 
 #volumes:
 #    thelibrary-postgres:

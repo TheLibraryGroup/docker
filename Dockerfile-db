@@ -1,0 +1,8 @@
+FROM postgres:latest
+COPY db/db_data.sql /docker-entrypoint-initdb.d/init.sql
+COPY db/db_insert.sql /opt/db_insert.sql
+COPY sh/backup-db.sh /opt/backup-db.sh
+RUN apt-get update \
+&& apt-get install vim -y \
+&& export EDITOR=/usr/bin/vim \
+&& chmod +x /opt/backup-db.sh \

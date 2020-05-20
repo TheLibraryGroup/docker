@@ -1,0 +1,5 @@
+{
+    "/api/*": {
+        "target": "https://thelibrary.ms.catalog.mypoc.online"
+    }
+}
